@@ -99,10 +99,12 @@ def get_db():
 
 # creating the app
 from fastapi import FastAPI,Path,Depends,Query
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import func
 app = FastAPI()
+app.add_middleware(CORSMiddleware,allow_origins=["*"],allow_methods=["*"],allow_headers=["*"])
 
 # get one student
 # Depends(get_db) means: before running this end point run the get_db function and give what it returns
