@@ -1,0 +1,32 @@
+
+services:
+  api:
+    build: .
+    container_name: student_api
+    ports:
+      - "8000:8000"
+    environment:
+      database_url: postgresql+psycopg://postgres:password@db:5432/studentdb
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:17
+    container_name: student_database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: studentdb
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d studentdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
